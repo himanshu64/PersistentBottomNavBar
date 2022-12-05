@@ -3,6 +3,7 @@ import "package:persistent_bottom_nav_bar/persistent_tab_view.dart";
 
 import "package:persistent_bottom_nav_bar_example_project/main.dart";
 import "package:persistent_bottom_nav_bar_example_project/screens.dart";
+import "package:we_slide/we_slide.dart";
 
 class CustomWidgetExample extends StatefulWidget {
   const CustomWidgetExample({final Key key, this.menuScreenContext})
@@ -16,6 +17,7 @@ class CustomWidgetExample extends StatefulWidget {
 class _CustomWidgetExampleState extends State<CustomWidgetExample> {
   PersistentTabController _controller;
   bool _hideNavBar;
+  WeSlideController weSlideController = WeSlideController( );
 
   @override
   void initState() {
@@ -106,24 +108,34 @@ class _CustomWidgetExampleState extends State<CustomWidgetExample> {
       ];
 
   @override
-  Widget build(final BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text("Navigation Bar Demo")),
-        drawer: Drawer(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const <Widget>[
-                Text("This is the Drawer"),
-              ],
-            ),
-          ),
-        ),
+  Widget build(final  BuildContext context) => Scaffold(
+        // appBar: AppBar(title: const Text("Navigation Bar Demo")),
+        // drawer: Drawer(
+        //   child: Center(
+        //     child: Column(
+        //       mainAxisAlignment: MainAxisAlignment.center,
+        //       children: const <Widget>[
+        //         Text("This is the Drawer"),
+        //       ],
+        //     ),
+        //   ),
+        // ),
         body: PersistentTabView.custom(
           context,
           controller: _controller,
           screens: _buildScreens(),
           itemCount: 5,
+          // floatingActionButton:  FloatingActionButton(
+          //   onPressed: () {  },
+          //   child: const Icon(Icons.add),
+          // ),
+          // Container(
+          //     color: Colors.white,
+          //     child: const Text("This is Panel "),
+          //   )
+          
           hideNavigationBar: _hideNavBar,
+          onWillPop: (final con)  => Future.value(false),
           screenTransitionAnimation: const ScreenTransitionAnimation(
             animateTabTransition: true,
           ),

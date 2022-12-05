@@ -87,7 +87,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "5.0.2"
+    version: "5.0.2+1"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -142,5 +142,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.2"
+  we_slide:
+    dependency: "direct dev"
+    description:
+      name: we_slide
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.4.0"
 sdks:
   dart: ">=2.17.0-0 <3.0.0"

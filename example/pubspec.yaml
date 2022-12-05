@@ -16,6 +16,7 @@ dev_dependencies:
   
   persistent_bottom_nav_bar:
     path: ../
+  we_slide: ^2.4.0
 
 flutter:
   uses-material-design: true
