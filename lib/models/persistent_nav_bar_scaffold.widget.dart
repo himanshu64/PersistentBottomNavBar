@@ -245,23 +245,15 @@ class _PersistentTabScaffoldState extends State<PersistentTabScaffold> {
         children: <Widget>[
           WeSlide(
             body: content,
-            // panel: widget.panel,
             overlay: true,
-            // panelHeader: widget.panelHeader,
-            panelHeader:  Container(
-              color: Colors.white,
-              height: 70,
-              child: const Text("This is Panel Header"),
-            ),
+            panelHeader: widget.panelHeader,
             backgroundColor: Colors.green,
             parallax: true,
             bodyWidth: MediaQuery.of(context).size.width,
             controller: wesController,
             panel: widget.panel,
-            // panelMinSize: widget.panelMinSize,
             panelMinSize: widget.panelMinSize,
             panelMaxSize: widget.panelMaxSize,
-            // panelMaxSize: widget.panelMaxSize,
             footer: MediaQuery(
               data: existingMediaQuery.copyWith(textScaleFactor: 1),
               child: Align(
