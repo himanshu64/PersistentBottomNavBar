@@ -51,6 +51,7 @@ class PersistentTabScaffold extends StatefulWidget {
     this.animatePadding = false,
     this.panel,
     this.panelHeader,
+    this.footerHeight ,
     this.weSlideController, this.panelMinSize = 0.0, this.panelMaxSize = 0.0,
   })  : assert(
             controller == null || controller.index < itemCount!,
@@ -89,6 +90,8 @@ class PersistentTabScaffold extends StatefulWidget {
   final double panelMinSize;
 
   final double panelMaxSize;
+
+  final double? footerHeight;
 
   @override
   _PersistentTabScaffoldState createState() => _PersistentTabScaffoldState();
@@ -144,7 +147,7 @@ class _PersistentTabScaffoldState extends State<PersistentTabScaffold> {
       _controller!.index = widget.itemCount! - 1;
     }
   }
-  final wesController = WeSlideController();
+
 
   @override
   Widget build(final BuildContext context) {
@@ -247,13 +250,12 @@ class _PersistentTabScaffoldState extends State<PersistentTabScaffold> {
             body: content,
             overlay: true,
             panelHeader: widget.panelHeader,
-            backgroundColor: Colors.green,
             parallax: true,
-            bodyWidth: MediaQuery.of(context).size.width,
-            controller: wesController,
+            controller: widget.weSlideController,
             panel: widget.panel,
             panelMinSize: widget.panelMinSize,
             panelMaxSize: widget.panelMaxSize,
+            footerHeight: widget.footerHeight!,
             footer: MediaQuery(
               data: existingMediaQuery.copyWith(textScaleFactor: 1),
               child: Align(
