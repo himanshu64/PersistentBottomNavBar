@@ -26,10 +26,10 @@ class PersistentTabView extends PersistentTabViewBase {
       this.resizeToAvoidBottomInset = false,
       this.bottomScreenMargin,
       this.selectedTabScreenContext,
+      this.panelMinSize,
+      this.panelMaxSize,
       this.panel,
       this.panelHeader,
-      this.panelMaxSize,
-      this.panelMinSize,
       this.hideNavigationBarWhenKeyboardShows = true,
       final bool popAllScreensOnTapOfSelectedTab = true,
       final bool popAllScreensOnTapAnyTabs = false,
@@ -83,6 +83,11 @@ class PersistentTabView extends PersistentTabViewBase {
           handleAndroidBackButtonPress: handleAndroidBackButtonPress,
           hideNavigationBar: hideNavigationBar,
           screenTransitionAnimation: screenTransitionAnimation,
+          weSlideController: weSlideController,
+          panelMinSize: panelMinSize,
+          panelMaxSize: panelMaxSize,
+          panel: panel,
+          panelHeader: panelHeader,
         );
 
   const PersistentTabView.custom(
@@ -107,8 +112,8 @@ class PersistentTabView extends PersistentTabViewBase {
     this.handleAndroidBackButtonPress = true,
     this.hideNavigationBar,
     this.weSlideController,
-    this.panelMaxSize,
     this.panelMinSize,
+    this.panelMaxSize,
     this.panel,
     this.panelHeader,
     this.screenTransitionAnimation = const ScreenTransitionAnimation(),
@@ -136,6 +141,11 @@ class PersistentTabView extends PersistentTabViewBase {
           hideNavigationBar: hideNavigationBar,
           screenTransitionAnimation: screenTransitionAnimation,
           isCustomWidget: true,
+          weSlideController: weSlideController,
+          panelMinSize: panelMinSize,
+          panelMaxSize: panelMaxSize,
+          panel: panel,
+          panelHeader: panelHeader,
           decoration: const NavBarDecoration(),
         );
 
@@ -262,9 +272,9 @@ class PersistentTabViewBase extends StatefulWidget {
       this.routeAndNavigatorSettings,
       this.weSlideController,
       this.panelHeader,
-      this.panel
-
-      })
+      this.panel,
+      this.panelMinSize,
+      this.panelMaxSize})
       : super(key: key);
 
   ///List of persistent bottom navigation bar items to be displayed in the navigation bar.
@@ -373,6 +383,10 @@ class PersistentTabViewBase extends StatefulWidget {
   final Widget? panel;
 
   final Widget? panelHeader;
+
+  final double? panelMinSize;
+
+  final double? panelMaxSize;
 
   @override
   _PersistentTabViewState createState() => _PersistentTabViewState();
@@ -497,8 +511,8 @@ class _PersistentTabViewState extends State<PersistentTabView> {
                 : widget.bottomScreenMargin,
         stateManagement: widget.stateManagement,
         weSlideController: widget.weSlideController,
-        panelMaxSize: widget.panelMaxSize!,
-        panelMinSize: widget.panelMinSize!,
+        panelMaxSize: widget.panelMaxSize ?? 0.0,
+        panelMinSize: widget.panelMinSize ?? 0.0,
         panel: widget.panel,
         panelHeader: widget.panelHeader,
         screenTransitionAnimation: widget.screenTransitionAnimation,
