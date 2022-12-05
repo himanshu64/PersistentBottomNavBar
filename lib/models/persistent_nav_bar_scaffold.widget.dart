@@ -49,6 +49,9 @@ class PersistentTabScaffold extends StatefulWidget {
     this.hideNavigationBarWhenKeyboardShows,
     this.itemCount,
     this.animatePadding = false,
+    this.panel,
+    this.panelHeader,
+    this.weSlideController, this.panelMinSize = 0.0, this.panelMaxSize = 0.0,
   })  : assert(
             controller == null || controller.index < itemCount!,
             "The PersistentTabController's current index ${controller.index} is "
@@ -76,6 +79,16 @@ class PersistentTabScaffold extends StatefulWidget {
   final bool? hideNavigationBarWhenKeyboardShows;
 
   final bool animatePadding;
+
+  final Widget? panel;
+
+  final Widget? panelHeader;
+
+  final WeSlideController? weSlideController;
+
+  final double panelMinSize;
+
+  final double panelMaxSize;
 
   @override
   _PersistentTabScaffoldState createState() => _PersistentTabScaffoldState();
@@ -131,6 +144,7 @@ class _PersistentTabScaffoldState extends State<PersistentTabScaffold> {
       _controller!.index = widget.itemCount! - 1;
     }
   }
+  final wesController = WeSlideController();
 
   @override
   Widget build(final BuildContext context) {
@@ -229,26 +243,47 @@ class _PersistentTabScaffoldState extends State<PersistentTabScaffold> {
               : BoxDecoration(color: CupertinoColors.black.withOpacity(1)),
       child: Stack(
         children: <Widget>[
-          content,
-          MediaQuery(
-            data: existingMediaQuery.copyWith(textScaleFactor: 1),
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: widget.tabBar.copyWith(
-                selectedIndex: _controller!.index,
-                onItemSelected: (final newIndex) {
-                  _controller!.index = newIndex;
-                  if (widget.tabBar.navBarEssentials!.onItemSelected != null) {
-                    setState(() {
-                      _selectedIndex = newIndex;
-                      _isTapAction = true;
-                      widget.tabBar.navBarEssentials!.onItemSelected!(newIndex);
-                    });
-                  }
-                },
+          WeSlide(
+            body: content,
+            // panel: widget.panel,
+            overlay: true,
+            // panelHeader: widget.panelHeader,
+            panelHeader:  Container(
+              color: Colors.white,
+              height: 70,
+              child: const Text("This is Panel Header"),
+            ),
+            backgroundColor: Colors.green,
+            parallax: true,
+            bodyWidth: MediaQuery.of(context).size.width,
+            controller: wesController,
+            panel: widget.panel,
+            // panelMinSize: widget.panelMinSize,
+            panelMinSize: widget.panelMinSize,
+            panelMaxSize: widget.panelMaxSize,
+            // panelMaxSize: widget.panelMaxSize,
+            footer: MediaQuery(
+              data: existingMediaQuery.copyWith(textScaleFactor: 1),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: widget.tabBar.copyWith(
+                  selectedIndex: _controller!.index,
+                  onItemSelected: (final newIndex) {
+                    _controller!.index = newIndex;
+                    if (widget.tabBar.navBarEssentials!.onItemSelected !=
+                        null) {
+                      setState(() {
+                        _selectedIndex = newIndex;
+                        _isTapAction = true;
+                        widget
+                            .tabBar.navBarEssentials!.onItemSelected!(newIndex);
+                      });
+                    }
+                  },
+                ),
               ),
             ),
-          ),
+          )
         ],
       ),
     );

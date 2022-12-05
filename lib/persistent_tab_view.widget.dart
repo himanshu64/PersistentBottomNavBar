@@ -26,6 +26,8 @@ class PersistentTabView extends PersistentTabViewBase {
       this.resizeToAvoidBottomInset = false,
       this.bottomScreenMargin,
       this.selectedTabScreenContext,
+      this.panel,
+      this.panelHeader,
       this.hideNavigationBarWhenKeyboardShows = true,
       final bool popAllScreensOnTapOfSelectedTab = true,
       final bool popAllScreensOnTapAnyTabs = false,
@@ -36,12 +38,13 @@ class PersistentTabView extends PersistentTabViewBase {
       this.handleAndroidBackButtonPress = true,
       final ItemAnimationProperties? itemAnimationProperties,
       this.hideNavigationBar,
+      this.weSlideController,
       this.screenTransitionAnimation = const ScreenTransitionAnimation(),
       final NavBarStyle navBarStyle = NavBarStyle.style1})
       : assert(items != null,
             "Items can only be null in case of custom navigation bar style. Please add the items!"),
-        assert(assertMidButtonStyles(navBarStyle, items!.length),
-            "NavBar styles 15-18 only accept 3 or 5 PersistentBottomNavBarItem items."),
+        // assert(assertMidButtonStyles(navBarStyle, items!.length),
+        //     "NavBar styles 15-18 only accept 3 or 5 PersistentBottomNavBarItem items."),
         assert(items!.length == screens.length,
             "screens and items length should be same. If you are using the onPressed callback function of 'PersistentBottomNavBarItem', enter a dummy screen like Container() in its place in the screens"),
         assert(items!.length >= 2 && items.length <= 6,
@@ -101,6 +104,9 @@ class PersistentTabView extends PersistentTabViewBase {
     this.stateManagement = true,
     this.handleAndroidBackButtonPress = true,
     this.hideNavigationBar,
+    this.weSlideController,
+    this.panel,
+    this.panelHeader,
     this.screenTransitionAnimation = const ScreenTransitionAnimation(),
   })  : assert(itemCount == screens.length,
             "screens and items length should be same. If you are using the onPressed callback function of 'PersistentBottomNavBarItem', enter a dummy screen like Container() in its place in the screens"),
@@ -199,43 +205,57 @@ class PersistentTabView extends PersistentTabViewBase {
 
   @override
   final BuildContext context;
+
+  @override
+  final WeSlideController? weSlideController;
+
+  @override
+  final Widget? panel;
+
+  @override
+  final Widget? panelHeader;
 }
 
 class PersistentTabViewBase extends StatefulWidget {
-  const PersistentTabViewBase({
-    final Key? key,
-    this.screens,
-    this.controller,
-    this.floatingActionButton,
-    this.margin,
-    this.confineInSafeArea,
-    this.handleAndroidBackButtonPress,
-    this.bottomScreenMargin,
-    this.resizeToAvoidBottomInset,
-    this.stateManagement,
-    this.screenTransitionAnimation,
-    this.hideNavigationBar,
-    this.context,
-    this.items,
-    this.backgroundColor,
-    this.onItemSelected,
-    this.decoration,
-    this.padding,
-    this.navBarStyle,
-    this.neumorphicProperties,
-    this.navBarHeight,
-    this.customWidget,
-    this.itemCount,
-    this.popAllScreensOnTapOfSelectedTab,
-    this.popAllScreensOnTapAnyTabs,
-    this.popActionScreens,
-    this.onWillPop,
-    this.hideNavigationBarWhenKeyboardShows,
-    this.itemAnimationProperties,
-    this.isCustomWidget,
-    this.selectedTabScreenContext,
-    this.routeAndNavigatorSettings,
-  }) : super(key: key);
+  const PersistentTabViewBase(
+      {final Key? key,
+      this.screens,
+      this.controller,
+      this.floatingActionButton,
+      this.margin,
+      this.confineInSafeArea,
+      this.handleAndroidBackButtonPress,
+      this.bottomScreenMargin,
+      this.resizeToAvoidBottomInset,
+      this.stateManagement,
+      this.screenTransitionAnimation,
+      this.hideNavigationBar,
+      this.context,
+      this.items,
+      this.backgroundColor,
+      this.onItemSelected,
+      this.decoration,
+      this.padding,
+      this.navBarStyle,
+      this.neumorphicProperties,
+      this.navBarHeight,
+      this.customWidget,
+      this.itemCount,
+      this.popAllScreensOnTapOfSelectedTab,
+      this.popAllScreensOnTapAnyTabs,
+      this.popActionScreens,
+      this.onWillPop,
+      this.hideNavigationBarWhenKeyboardShows,
+      this.itemAnimationProperties,
+      this.isCustomWidget,
+      this.selectedTabScreenContext,
+      this.routeAndNavigatorSettings,
+      this.weSlideController,
+      this.panelHeader,
+      this.panel
+
+      })
+      : super(key: key);
 
   ///List of persistent bottom navigation bar items to be displayed in the navigation bar.
   final List<PersistentBottomNavBarItem>? items;
@@ -338,6 +358,12 @@ class PersistentTabViewBase extends StatefulWidget {
 
   final Function(BuildContext)? selectedTabScreenContext;
 
+  final WeSlideController? weSlideController;
+
+  final Widget? panel;
+
+  final Widget? panelHeader;
+
   @override
   _PersistentTabViewState createState() => _PersistentTabViewState();
 }
@@ -437,135 +463,6 @@ class _PersistentTabViewState extends State<PersistentTabView> {
           ),
         ],
       );
-    } else if (widget.navBarStyle == NavBarStyle.style15) {
-      return Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          SizedBox.expand(
-            child: CustomTabView(
-              routeAndNavigatorSettings: routeAndNavigatorSettings,
-              builder: (final screenContext) {
-                _contextList[index] = screenContext;
-                if (_sendScreenContext) {
-                  _sendScreenContext = false;
-                  widget.selectedTabScreenContext!(_contextList[index]);
-                }
-                return Material(child: widget.screens[index]);
-              },
-            ),
-          ),
-          if (_navBarHeight == 0)
-            const SizedBox.shrink()
-          else
-            Positioned(
-              bottom: (_navBarHeight! -
-                      (widget.bottomScreenMargin ??
-                          _navBarHeight! + widget.margin.top))
-                  .abs(),
-              child: GestureDetector(
-                onTap: () {
-                  if (widget.items![(widget.items!.length / 2).floor()]
-                          .onPressed !=
-                      null) {
-                    widget.items![(widget.items!.length / 2).floor()]
-                        .onPressed!(_contextList[_controller!.index]);
-                  } else {
-                    _controller!.index = (widget.items!.length / 2).floor();
-                  }
-                },
-                child: Center(
-                  child: Container(
-                    height: 21.0 +
-                        min(
-                            widget.navBarHeight!,
-                            max(
-                                    widget.decoration!.borderRadius!.topRight.y,
-                                    widget
-                                        .decoration!.borderRadius!.topLeft.y) +
-                                (widget.decoration?.border != null
-                                    ? widget
-                                        .decoration!.border!.dimensions.vertical
-                                    : 0.0)),
-                    margin: EdgeInsets.only(
-                        left: MediaQuery.of(context).size.width / 2 -
-                            (MediaQuery.of(context).size.width / 5.0 - 30.0) /
-                                2),
-                    width: MediaQuery.of(context).size.width / 5.0 - 30.0,
-                    decoration: const BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(100),
-                          topRight: Radius.circular(100),
-                        )),
-                  ),
-                ),
-              ),
-            ),
-        ],
-      );
-    } else if (widget.navBarStyle == NavBarStyle.style16) {
-      return Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          SizedBox.expand(
-            child: CustomTabView(
-              routeAndNavigatorSettings: routeAndNavigatorSettings,
-              builder: (final screenContext) {
-                _contextList[index] = screenContext;
-                if (_sendScreenContext) {
-                  _sendScreenContext = false;
-                  widget.selectedTabScreenContext!(_contextList[index]);
-                }
-                return Material(child: widget.screens[index]);
-              },
-            ),
-          ),
-          if (_navBarHeight == 0)
-            const SizedBox.shrink()
-          else
-            Positioned(
-              bottom: (_navBarHeight! -
-                      (widget.bottomScreenMargin ??
-                          _navBarHeight! + widget.margin.top))
-                  .abs(),
-              child: GestureDetector(
-                onTap: () {
-                  if (widget.items![(widget.items!.length / 2).floor()]
-                          .onPressed !=
-                      null) {
-                    widget.items![(widget.items!.length / 2).floor()]
-                        .onPressed!(_contextList[_controller!.index]);
-                  } else {
-                    _controller!.index = (widget.items!.length / 2).floor();
-                  }
-                },
-                child: Center(
-                  child: Container(
-                    height: 21 +
-                        min(
-                            widget.navBarHeight!,
-                            max(
-                                    widget.decoration!.borderRadius!.topRight.y,
-                                    widget
-                                        .decoration!.borderRadius!.topLeft.y) +
-                                (widget.decoration?.border != null
-                                    ? widget
-                                        .decoration!.border!.dimensions.vertical
-                                    : 0.0)),
-                    margin: EdgeInsets.only(
-                        left: MediaQuery.of(context).size.width / 2 -
-                            (MediaQuery.of(context).size.width / 5.0 - 30.0) /
-                                2),
-                    width: MediaQuery.of(context).size.width / 5.0 - 30.0,
-                    decoration: const BoxDecoration(
-                      color: Colors.transparent,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-        ],
-      );
     } else {
       return CustomTabView(
           routeAndNavigatorSettings: routeAndNavigatorSettings,
@@ -589,6 +486,11 @@ class _PersistentTabViewState extends State<PersistentTabView> {
                 ? 0.0
                 : widget.bottomScreenMargin,
         stateManagement: widget.stateManagement,
+        weSlideController: widget.weSlideController,
+        panelMinSize: 60,
+        panelMaxSize: MediaQuery.of(context).size.height,
+        panel: widget.panel,
+        panelHeader: widget.panelHeader,
         screenTransitionAnimation: widget.screenTransitionAnimation,
         hideNavigationBarWhenKeyboardShows:
             widget.hideNavigationBarWhenKeyboardShows,
@@ -757,16 +659,16 @@ class _PersistentTabViewState extends State<PersistentTabView> {
 
 //asserts
 
-bool assertMidButtonStyles(final NavBarStyle navBarStyle, final int itemCount) {
-  if (navBarStyle == NavBarStyle.style15 ||
-      navBarStyle == NavBarStyle.style16 ||
-      navBarStyle == NavBarStyle.style17 ||
-      navBarStyle == NavBarStyle.style18) {
-    if (itemCount % 2 != 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  return true;
-}
+// bool assertMidButtonStyles(final NavBarStyle navBarStyle, final int itemCount) {
+//   if (navBarStyle == NavBarStyle.style15 ||
+//       navBarStyle == NavBarStyle.style16 ||
+//       navBarStyle == NavBarStyle.style17 ||
+//       navBarStyle == NavBarStyle.style18) {
+//     if (itemCount % 2 != 0) {
+//       return true;
+//     } else {
+//       return false;
+//     }
+//   }
+//   return true;
+// }
