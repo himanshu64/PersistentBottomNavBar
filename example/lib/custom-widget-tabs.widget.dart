@@ -126,15 +126,24 @@ class _CustomWidgetExampleState extends State<CustomWidgetExample> {
           screens: _buildScreens(),
           itemCount: 5,
 
-          panelMaxSize: MediaQuery.of(context).size.height,
-          panelMinSize: 70,
+          // panelMaxSize: MediaQuery.of(context).size.height,
+          // panelMinSize: 70,
           
+
           hideNavigationBar: _hideNavBar,
           onWillPop: (final con)  => Future.value(false),
           screenTransitionAnimation: const ScreenTransitionAnimation(
             animateTabTransition: true,
           ),
-          
+          panel: const SizedBox(
+
+            child: Text("Panel Body"),
+          ),
+          panelMaxSize: MediaQuery.of(context).size.height,
+          panelMinSize: 70,
+          panelHeader: const SizedBox(
+            child: Text("Panel Header"),
+          ),
           customWidget: CustomNavBarWidget(
             _navBarsItems(),
             onItemSelected: (final index) {
