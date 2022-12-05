@@ -28,6 +28,8 @@ class PersistentTabView extends PersistentTabViewBase {
       this.selectedTabScreenContext,
       this.panel,
       this.panelHeader,
+      this.panelMaxSize,
+      this.panelMinSize,
       this.hideNavigationBarWhenKeyboardShows = true,
       final bool popAllScreensOnTapOfSelectedTab = true,
       final bool popAllScreensOnTapAnyTabs = false,
@@ -105,6 +107,8 @@ class PersistentTabView extends PersistentTabViewBase {
     this.handleAndroidBackButtonPress = true,
     this.hideNavigationBar,
     this.weSlideController,
+    this.panelMaxSize,
+    this.panelMinSize,
     this.panel,
     this.panelHeader,
     this.screenTransitionAnimation = const ScreenTransitionAnimation(),
@@ -214,6 +218,12 @@ class PersistentTabView extends PersistentTabViewBase {
 
   @override
   final Widget? panelHeader;
+
+  @override
+  final double? panelMinSize;
+
+  @override
+  final double? panelMaxSize;
 }
 
 class PersistentTabViewBase extends StatefulWidget {
@@ -487,8 +497,8 @@ class _PersistentTabViewState extends State<PersistentTabView> {
                 : widget.bottomScreenMargin,
         stateManagement: widget.stateManagement,
         weSlideController: widget.weSlideController,
-        panelMinSize: 60,
-        panelMaxSize: MediaQuery.of(context).size.height,
+        panelMaxSize: widget.panelMaxSize!,
+        panelMinSize: widget.panelMinSize!,
         panel: widget.panel,
         panelHeader: widget.panelHeader,
         screenTransitionAnimation: widget.screenTransitionAnimation,

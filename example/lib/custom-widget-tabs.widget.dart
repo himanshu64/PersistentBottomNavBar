@@ -125,20 +125,16 @@ class _CustomWidgetExampleState extends State<CustomWidgetExample> {
           controller: _controller,
           screens: _buildScreens(),
           itemCount: 5,
-          // floatingActionButton:  FloatingActionButton(
-          //   onPressed: () {  },
-          //   child: const Icon(Icons.add),
-          // ),
-          // Container(
-          //     color: Colors.white,
-          //     child: const Text("This is Panel "),
-          //   )
+
+          panelMaxSize: MediaQuery.of(context).size.height,
+          panelMinSize: 70,
           
           hideNavigationBar: _hideNavBar,
           onWillPop: (final con)  => Future.value(false),
           screenTransitionAnimation: const ScreenTransitionAnimation(
             animateTabTransition: true,
           ),
+          
           customWidget: CustomNavBarWidget(
             _navBarsItems(),
             onItemSelected: (final index) {
