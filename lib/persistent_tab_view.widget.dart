@@ -41,7 +41,6 @@ class PersistentTabView extends PersistentTabViewBase {
       final ItemAnimationProperties? itemAnimationProperties,
       this.hideNavigationBar,
       this.weSlideController,
-      this.footerHeight,
       this.screenTransitionAnimation = const ScreenTransitionAnimation(),
       final NavBarStyle navBarStyle = NavBarStyle.style1})
       : assert(items != null,
@@ -117,7 +116,6 @@ class PersistentTabView extends PersistentTabViewBase {
     this.panelMaxSize,
     this.panel,
     this.panelHeader,
-    this.footerHeight = 60.0,
     this.screenTransitionAnimation = const ScreenTransitionAnimation(),
   })  : assert(itemCount == screens.length,
             "screens and items length should be same. If you are using the onPressed callback function of 'PersistentBottomNavBarItem', enter a dummy screen like Container() in its place in the screens"),
@@ -237,8 +235,6 @@ class PersistentTabView extends PersistentTabViewBase {
   @override
   final double? panelMaxSize;
 
-  @override
-  final double? footerHeight;
 }
 
 class PersistentTabViewBase extends StatefulWidget {
